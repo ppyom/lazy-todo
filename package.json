@@ -6,6 +6,16 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:web": "npm run dev --workspace apps/web"
+    "dev:web": "npm run dev --workspace apps/web",
+    "lint:web": "npm run lint --workspace apps/web"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.2",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
   }
 }
