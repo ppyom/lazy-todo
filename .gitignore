@@ -5,6 +5,14 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Yarn Berry
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/patches
+!.yarn/sdks
+!.yarn/versions
+
 # Next.js
 .next/
 out/

@@ -1,13 +1,13 @@
 {
   "name": "lazy-todo",
+  "packageManager": "yarn@4.9.2",
   "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev:web": "npm run dev --workspace apps/web",
-    "lint:web": "npm run lint --workspace apps/web"
+    "web": "yarn workspace web"
   },
   "devDependencies": {
     "@types/node": "^25.2.2",
