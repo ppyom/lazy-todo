@@ -12,9 +12,8 @@ interface Props {
   href: string;
 }
 
-export default function NavItem({ icon, title, href }: Props) {
+export default function NavItem({ icon: IconComponent, title, href }: Props) {
   const pathname = usePathname();
-  const IconComponent = icon;
 
   return (
     <Link

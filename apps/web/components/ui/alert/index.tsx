@@ -12,7 +12,7 @@ interface Props {
 export default function Alert({
   title,
   content,
-  icon: Icon,
+  icon: IconComponent,
   className,
 }: Props) {
   return (
@@ -23,7 +23,7 @@ export default function Alert({
         className,
       )}
     >
-      {Icon && <Icon className="mt-1" size={16} />}
+      {IconComponent && <IconComponent className="mt-1" size={16} />}
       <div className="space-y-2">
         <p className="font-bold">{title}</p>
         <p>{content}</p>
