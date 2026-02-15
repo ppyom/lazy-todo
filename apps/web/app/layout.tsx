@@ -1,11 +1,20 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
+
+import { cn } from '@/lib/utils/cn';
 
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Lazy Todo',
   description: 'Lazy Todo',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#ffffff',
 };
 
 const pretendard = localFont({
@@ -22,7 +31,11 @@ interface Props {
 export default function RootLayout({ children }: Readonly<Props>) {
   return (
     <html lang="ko">
-      <body className={pretendard.variable}>{children}</body>
+      <body
+        className={cn(pretendard.variable, 'h-dvh bg-gray-100 overscroll-none')}
+      >
+        {children}
+      </body>
     </html>
   );
 }
