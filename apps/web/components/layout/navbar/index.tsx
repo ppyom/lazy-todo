@@ -1,6 +1,6 @@
 'use client';
 
-import { navItems } from '@/lib/constants/nav-items';
+import { navItems } from '@/lib/routes/nav-items';
 
 import NavItem from './nav-item';
 

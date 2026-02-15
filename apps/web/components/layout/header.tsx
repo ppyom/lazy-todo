@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 
-import { routes } from '@/lib/constants/route-meta';
+import { getRouteMeta } from '@/lib/routes/route-meta';
 import { cn } from '@/lib/utils/cn';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 
 export default function Header({ left, right }: Props) {
   const pathname = usePathname();
-  const meta = routes[pathname];
+  const meta = getRouteMeta(pathname);
 
   return (
     <header className={cn('p-4 bg-card', 'flex justify-between')}>

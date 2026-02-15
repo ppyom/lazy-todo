@@ -8,7 +8,7 @@ export interface RouteMeta {
   showInNav?: boolean;
 }
 
-export const routes: Record<string, RouteMeta> = {
+export const routes = {
   '/': {
     title: '홈',
     pageTitle: '오늘의 할 일',
@@ -34,4 +34,17 @@ export const routes: Record<string, RouteMeta> = {
   '/signup': {
     title: '회원가입',
   },
-};
+} satisfies Record<string, RouteMeta>;
+
+export type RoutePath = keyof typeof routes;
+
+export function getRouteMeta(pathname: string): RouteMeta {
+  if (!(pathname in routes)) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`routes에 정의되지 않은 경로입니다. ${pathname}`);
+    }
+    return routes['/']; // 또는 기본 메타
+  }
+
+  return routes[pathname as RoutePath];
+}
