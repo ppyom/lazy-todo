@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { defferReasonMap, getEmojiLabel, statusMap } from '@/lib/todo';
 import { Badge, Checkbox } from '@/components/ui';
-import type { Todo } from '@/types/todo';
+import { type Todo, TodoStatus } from '@/types/todo';
 
 import CleanupAction from './cleanup-action';
 import DeferAction from './defer-action';
@@ -55,7 +55,10 @@ export default function TodoItem({
       <Checkbox
         checked={isCompleted}
         onChange={() =>
-          onStatusChange?.(id, isCompleted ? 'IN_PROGRESS' : 'COMPLETED')
+          onStatusChange?.(
+            id,
+            isCompleted ? TodoStatus.IN_PROGRESS : TodoStatus.COMPLETED,
+          )
         }
       />
       <div className="flex-1 space-y-2">

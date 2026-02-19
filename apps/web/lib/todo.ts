@@ -1,21 +1,21 @@
 import type { MapDetail } from '@/types/common';
-import type { DeferReason, TodoStatus } from '@/types/todo';
+import { DeferReason, TodoStatus } from '@/types/todo';
 
 const CLEANUP_THRESHOLD = 3;
 
 export const statusMap: Record<TodoStatus, MapDetail> = {
-  IN_PROGRESS: { label: '진행중', emoji: '🌱' },
-  DEFERRED: { label: '미뤄둠', emoji: '⌛' },
-  ARCHIVED: { label: '정리함', emoji: '🧹' },
-  COMPLETED: { label: '완료', emoji: '🌟' },
+  [TodoStatus.IN_PROGRESS]: { label: '진행중', emoji: '🌱' },
+  [TodoStatus.DEFERRED]: { label: '미뤄둠', emoji: '⌛' },
+  [TodoStatus.ARCHIVED]: { label: '정리함', emoji: '🧹' },
+  [TodoStatus.COMPLETED]: { label: '완료', emoji: '🌟' },
 } as const;
 
 export const defferReasonMap: Record<DeferReason, MapDetail> = {
-  LOW_ENERGY: { label: '에너지 부족', emoji: '🪫' },
-  LACK_OF_TIME: { label: '시간 부족', emoji: '⌛' },
-  DISTRACTED: { label: '정신없음', emoji: '🌀' },
-  JUST_CANT: { label: '그냥 하기 싫음', emoji: '🫥' },
-  OTHER: { label: '다른 이유', emoji: '💬' },
+  [DeferReason.LOW_ENERGY]: { label: '에너지 부족', emoji: '🪫' },
+  [DeferReason.LACK_OF_TIME]: { label: '시간 부족', emoji: '⌛' },
+  [DeferReason.DISTRACTED]: { label: '정신없음', emoji: '🌀' },
+  [DeferReason.JUST_CANT]: { label: '그냥 하기 싫음', emoji: '🫥' },
+  [DeferReason.OTHER]: { label: '다른 이유', emoji: '💬' },
 } as const;
 
 /**
