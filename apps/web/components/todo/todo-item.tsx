@@ -101,7 +101,9 @@ export default function TodoItem({
                   variant="accent"
                 />
               </motion.div>
-              {deferReason && (
+            </AnimatePresence>
+            {deferReason && (
+              <AnimatePresence mode="wait">
                 <motion.div
                   key={`reason-${deferReason}`}
                   className="inline-block"
@@ -116,8 +118,8 @@ export default function TodoItem({
                     variant="secondary"
                   />
                 </motion.div>
-              )}
-            </AnimatePresence>
+              </AnimatePresence>
+            )}
           </div>
         )}
       </div>
