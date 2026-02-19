@@ -25,10 +25,10 @@ export default function Page() {
 
   return (
     <div
-      className="relative p-4 h-full flex flex-col gap-4 overflow-y-auto"
+      className="py-4 h-full flex flex-col gap-4"
       style={{ overflowAnchor: 'none' }}
     >
-      <div className="flex-1">
+      <div className="flex-1 px-4 overflow-y-auto">
         <TodoList
           todos={inProgressTodoList}
           onStatusChange={handleStatusChange}
@@ -37,7 +37,7 @@ export default function Page() {
           onDelete={handleDelete}
         />
       </div>
-      <div className="sticky bottom-0 left-4 right-4">
+      <div className="px-4">
         <NewTodoInput onAdd={handleAdd} />
       </div>
     </div>
