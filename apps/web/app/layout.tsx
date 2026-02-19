@@ -32,7 +32,10 @@ export default function RootLayout({ children }: Readonly<Props>) {
   return (
     <html lang="ko">
       <body
-        className={cn(pretendard.variable, 'h-dvh bg-gray-100 overscroll-none')}
+        className={cn(
+          pretendard.variable,
+          'h-dvh bg-gray-100 overscroll-none overflow-hidden',
+        )}
       >
         {children}
       </body>
