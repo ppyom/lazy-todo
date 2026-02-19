@@ -2,7 +2,7 @@
 
 import { useMounted } from '@/hooks/use-mounted';
 import { useTodoList } from '@/hooks/use-todo-list';
-import { NewTodoInput, TodoList } from '@/components/todo';
+import { NewTodoInput, TodoEmptyState, TodoList } from '@/components/todo';
 import { TodoStatus } from '@/types/todo';
 
 export default function Page() {
@@ -29,13 +29,17 @@ export default function Page() {
       style={{ overflowAnchor: 'none' }}
     >
       <div className="flex-1 px-4 overflow-y-auto">
-        <TodoList
-          todos={inProgressTodoList}
-          onStatusChange={handleStatusChange}
-          onDefer={handleDefer}
-          onCleanup={handleCleanup}
-          onDelete={handleDelete}
-        />
+        {inProgressTodoList.length > 0 ? (
+          <TodoList
+            todos={inProgressTodoList}
+            onStatusChange={handleStatusChange}
+            onDefer={handleDefer}
+            onCleanup={handleCleanup}
+            onDelete={handleDelete}
+          />
+        ) : (
+          <TodoEmptyState />
+        )}
       </div>
       <div className="px-4">
         <NewTodoInput onAdd={handleAdd} />
