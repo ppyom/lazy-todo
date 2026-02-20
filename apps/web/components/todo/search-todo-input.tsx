@@ -32,11 +32,14 @@ export default function SearchTodoInput({ defaultValue, onSearch }: Props) {
   };
 
   useEffect(() => {
+    const isSame = (keyword || '') === (defaultValue || '');
+    if (isSame) return;
+
     const timer = setTimeout(() => {
       onSearch(keyword);
     }, 500);
     return () => clearTimeout(timer);
-  }, [keyword, onSearch]);
+  }, [keyword, onSearch, defaultValue]);
 
   return (
     <div className="flex items-center gap-2">
