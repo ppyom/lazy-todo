@@ -31,8 +31,7 @@ export default function Page() {
       const matchedKeyword = todo.content
         .toLowerCase()
         .includes(searchQuery?.toLowerCase() || '');
-      const matchedStatus =
-        selectedStatus === 'ALL' || todo.status === selectedStatus;
+      const matchedStatus = !selectedStatus || todo.status === selectedStatus;
       return matchedKeyword && matchedStatus;
     });
   }, [todoList, searchQuery, selectedStatus]);
@@ -55,9 +54,7 @@ export default function Page() {
         />
         <TodoStatusFilter
           selectedStatus={selectedStatus}
-          onStatusChange={(status) =>
-            setFilters({ q: searchQuery, status: status || 'ALL' })
-          }
+          onStatusChange={(status) => setFilters({ q: searchQuery, status })}
         />
       </div>
       <div className="flex-1 px-4 overflow-y-auto">

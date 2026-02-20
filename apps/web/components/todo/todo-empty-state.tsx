@@ -6,7 +6,7 @@ import type { TodoStatus } from '@/types/todo';
 
 interface Props {
   searchQuery?: string | null;
-  selectedStatus?: TodoStatus | 'ALL';
+  selectedStatus?: TodoStatus | null;
   onClear?: () => void;
 }
 
@@ -15,14 +15,10 @@ export default function TodoEmptyState({
   selectedStatus,
   onClear,
 }: Props) {
-  const isFiltering =
-    !!searchQuery || (!!selectedStatus && selectedStatus !== 'ALL');
+  const isFiltering = !!searchQuery || !!selectedStatus;
 
   if (isFiltering) {
-    const statusLabel =
-      selectedStatus && selectedStatus !== 'ALL'
-        ? statusMap[selectedStatus].label
-        : '';
+    const statusLabel = selectedStatus ? statusMap[selectedStatus].label : '';
     const displayKeyword = searchQuery || statusLabel;
 
     return (

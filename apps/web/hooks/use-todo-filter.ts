@@ -18,19 +18,19 @@ export function useTodoFilter() {
 
   return {
     searchQuery: getQuery('q'),
-    selectedStatus: (getQuery('status') as TodoStatus | 'ALL') || 'ALL',
+    selectedStatus: getQuery('status') as TodoStatus | null,
     /**
      * 특정 필터 항목을 선택적으로 업데이트합니다.
      * @param {Object} params - 업데이트할 필터 항목
      * @param {string | null} [params.q] - 검색어
-     * @param {TodoStatus | 'ALL' | null} [params.status] - 할 일 상태
+     * @param {TodoStatus | null} [params.status] - 할 일 상태
      */
     setFilters: ({
       q,
       status,
     }: {
       q?: string | null;
-      status?: TodoStatus | 'ALL' | null;
+      status?: TodoStatus | null;
     }) => setQueries({ q, status }),
     clearFilters: () => setQueries({ q: null, status: null }),
   };

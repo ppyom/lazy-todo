@@ -5,7 +5,7 @@ import { Button } from '@/components/ui';
 import { TodoStatus } from '@/types/todo';
 
 interface Props {
-  selectedStatus: TodoStatus | 'ALL';
+  selectedStatus: TodoStatus | null;
   onStatusChange: (status?: TodoStatus) => void;
 }
 
