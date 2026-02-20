@@ -1,22 +1,17 @@
 'use client';
 
 import { useMemo } from 'react';
-import { CoffeeIcon, SearchXIcon } from 'lucide-react';
 
-import { statusMap } from '@/lib/todo';
 import { useMounted } from '@/hooks/use-mounted';
 import { useTodoFilter } from '@/hooks/use-todo-filter';
 import { useTodoList } from '@/hooks/use-todo-list';
-import { Button } from '@/components/ui';
-import EmptyState from '@/components/ui/empty-state';
 import {
   NewTodoInput,
   SearchTodoInput,
+  TodoEmptyState,
   TodoList,
   TodoStatusFilter,
 } from '@/components/todo';
-
-import TodoEmptyState from '../../../components/todo/todo-empty-state';
 
 export default function Page() {
   const isMounted = useMounted();
