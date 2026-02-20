@@ -39,7 +39,13 @@ export function useTodoList() {
     setTodoList((prev) =>
       prev.map((item) =>
         item.id === id
-          ? { ...item, status, deferReason: undefined, updatedAt: new Date() }
+          ? {
+              ...item,
+              status,
+              deferReason: undefined,
+              updatedAt: new Date(),
+              deferCount: 0,
+            }
           : item,
       ),
     );
@@ -68,6 +74,7 @@ export function useTodoList() {
               status: TodoStatus.ARCHIVED,
               deferReason: undefined,
               updatedAt: new Date(),
+              deferCount: 0,
             }
           : item,
       ),

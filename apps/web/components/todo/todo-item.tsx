@@ -136,7 +136,11 @@ export default function TodoItem({
             }}
           >
             {status === 'IN_PROGRESS' && (
-              <DeferAction onReason={(reason) => onDefer?.(id, reason)} />
+              <DeferAction
+                todo={todo}
+                onReason={(reason) => onDefer?.(id, reason)}
+                onCleanup={(confirmed) => confirmed && onCleanup?.(id)}
+              />
             )}
             {status === 'DEFERRED' && (
               <CleanupAction
