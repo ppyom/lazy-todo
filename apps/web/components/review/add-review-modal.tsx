@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { useEffect, useState } from 'react';
 
-import { reviewEmojiMap } from '@/lib/review';
 import { Button, Input, Modal } from '@/components/ui';
 import type { Review, ReviewEmoji } from '@/types/review';
+
+import DraggableEmojiList from './draggable-emoji-list';
 
 interface Props {
   open: boolean;
@@ -58,29 +58,12 @@ export default function AddReviewModal({
           <br />
           이미 작성했다면 해당 기록을 다시 보여드릴게요.
         </p>
-        <div className="py-1 overflow-x-auto flex gap-1">
-          {Object.keys(reviewEmojiMap).map((key) => {
-            const currentKey = key as ReviewEmoji;
-            const currentEmotion = reviewEmojiMap[currentKey];
-            return (
-              <Button
-                key={key}
-                variant={
-                  selectedEmotion === currentKey ? 'default' : 'secondary'
-                }
-                className="rounded-full shrink-0 duration-100"
-                title={currentEmotion.label}
-                onClick={() =>
-                  setSelectedEmotion(
-                    selectedEmotion === currentKey ? null : currentKey,
-                  )
-                }
-              >
-                {currentEmotion.emoji}
-              </Button>
-            );
-          })}
-        </div>
+        <DraggableEmojiList
+          selectedEmotion={selectedEmotion}
+          onEmotionClick={(selected) =>
+            setSelectedEmotion(selectedEmotion === selected ? null : selected)
+          }
+        />
         <Input
           className="w-full border border-muted"
           placeholder="오늘의 순간을 적어보세요! (선택)"
