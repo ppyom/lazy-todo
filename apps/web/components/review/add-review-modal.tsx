@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { reviewEmojiMap } from '@/lib/review';
 import { Button, Input, Modal } from '@/components/ui';
@@ -20,9 +21,9 @@ export default function AddReviewModal({
   initialData,
 }: Props) {
   const [selectedEmotion, setSelectedEmotion] = useState<ReviewEmoji | null>(
-    initialData ? initialData.emoji : null,
+    null,
   );
-  const [content, setContent] = useState<string>(initialData?.comment || '');
+  const [content, setContent] = useState<string>('');
 
   const handleReset = () => {
     onClose();
@@ -39,6 +40,14 @@ export default function AddReviewModal({
     // 저장되었습니다.
     handleReset();
   };
+
+  useEffect(() => {
+    const handleSetupInitialData = () => {
+      setSelectedEmotion(initialData ? initialData.emoji : null);
+      setContent(initialData?.comment || '');
+    };
+    handleSetupInitialData();
+  }, [initialData]);
 
   return (
     <Modal open={open} onClose={handleReset}>
