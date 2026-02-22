@@ -1,3 +1,5 @@
+import ReviewPage from '@/components/page/review-page';
+
 export default function Page() {
-  return <div>기록</div>;
+  return <ReviewPage />;
 }

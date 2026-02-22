@@ -55,7 +55,7 @@ export default function Modal({
             ref={modalRef}
             className={cn(
               'relative z-10',
-              'bg-card rounded-2xl p-4 w-full max-w-sm mx-4',
+              'bg-card rounded-2xl p-4 w-full min-w-0 max-w-sm mx-4',
             )}
             variants={ModalAnimations[animation]}
             initial="initial"

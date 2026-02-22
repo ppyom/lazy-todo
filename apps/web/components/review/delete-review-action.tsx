@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { Trash2Icon } from 'lucide-react';
 
-import { Button } from '@/components/ui';
 import { DeleteModal } from '@/components/common';
 
 interface Props {
   onDelete: () => void;
 }
 
-export default function DeleteAction({ onDelete }: Props) {
+export default function DeleteReviewAction({ onDelete }: Props) {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -23,9 +23,12 @@ export default function DeleteAction({ onDelete }: Props) {
 
   return (
     <>
-      <Button className="text-sm" onClick={() => setOpen(true)}>
-        삭제
-      </Button>
+      <button
+        className="p-2 rounded-full text-muted-foreground/80 active:bg-secondary/20 active:text-muted-foreground transition-colors duration-300"
+        onClick={() => setOpen(true)}
+      >
+        <Trash2Icon size={16} />
+      </button>
       <DeleteModal open={open} onClose={handleClose} onDelete={handleDelete} />
     </>
   );
