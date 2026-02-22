@@ -2,7 +2,11 @@
 
 import { useMounted } from '@/hooks/use-mounted';
 import { useReviewList } from '@/hooks/use-review-list';
-import { AddReviewAction, ReviewList } from '@/components/review';
+import {
+  AddReviewAction,
+  ReviewEmptyState,
+  ReviewList,
+} from '@/components/review';
 
 export default function ReviewPage() {
   const isMounted = useMounted();
@@ -18,7 +22,11 @@ export default function ReviewPage() {
       style={{ overflowAnchor: 'none' }}
     >
       <div className="px-4 flex-1 overflow-y-auto">
-        <ReviewList reviewList={reviewList} onDelete={handleDelete} />
+        {reviewList.length > 0 ? (
+          <ReviewList reviewList={reviewList} onDelete={handleDelete} />
+        ) : (
+          <ReviewEmptyState />
+        )}
       </div>
       <div className="px-4">
         <AddReviewAction onSave={handleSave} initialData={todayReview} />
