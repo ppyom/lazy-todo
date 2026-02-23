@@ -43,7 +43,7 @@ export function useTodoList() {
               ...item,
               status,
               deferReason: undefined,
-              updatedAt: new Date(),
+              updatedAt: new Date().toString(),
               deferCount: 0,
             }
           : item,
@@ -59,7 +59,7 @@ export function useTodoList() {
               status: TodoStatus.DEFERRED,
               deferReason: reason,
               deferCount: item.deferCount + 1,
-              updatedAt: new Date(),
+              updatedAt: new Date().toString(),
             }
           : item,
       ),
@@ -73,7 +73,7 @@ export function useTodoList() {
               ...item,
               status: TodoStatus.ARCHIVED,
               deferReason: undefined,
-              updatedAt: new Date(),
+              updatedAt: new Date().toString(),
               deferCount: 0,
             }
           : item,
@@ -91,8 +91,8 @@ export function useTodoList() {
         content,
         status: TodoStatus.IN_PROGRESS,
         deferCount: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toString(),
+        updatedAt: new Date().toString(),
       },
     ]);
   };

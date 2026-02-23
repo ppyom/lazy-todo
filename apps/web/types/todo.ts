@@ -19,7 +19,6 @@ export interface Todo {
   status: TodoStatus;
   deferCount: number;
   deferReason?: DeferReason;
-
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

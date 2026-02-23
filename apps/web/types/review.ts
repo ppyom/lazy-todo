@@ -15,6 +15,6 @@ export interface Review {
   id: string;
   emoji: ReviewEmoji;
   comment?: string;
-  createdAt: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt: string;
 }

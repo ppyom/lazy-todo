@@ -26,7 +26,7 @@ export function useReviewList() {
   }, [reviewList]);
 
   const handleSave = (emoji: ReviewEmoji, comment: string) => {
-    const now = new Date();
+    const now = new Date().toString();
 
     if (todayReview) {
       // 수정
@@ -41,7 +41,13 @@ export function useReviewList() {
       // 작성
       setReviewList((prev) => [
         ...prev,
-        { id: Date.now().toString(), emoji, comment, createdAt: now },
+        {
+          id: Date.now().toString(),
+          emoji,
+          comment,
+          createdAt: now,
+          updatedAt: now,
+        },
       ]);
     }
   };
