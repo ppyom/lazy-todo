@@ -1,3 +1,5 @@
+import { review } from '@/db/local/schema';
+
 export enum ReviewEmoji {
   HAPPY = 'HAPPY',
   NORMAL = 'NORMAL',
@@ -11,10 +13,4 @@ export enum ReviewEmoji {
   ANNOYED = 'ANNOYED',
 }
 
-export interface Review {
-  id: string;
-  emoji: ReviewEmoji;
-  comment?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+export type Review = typeof review.$inferSelect;

@@ -1,3 +1,5 @@
+import { todo } from '@/db/local/schema';
+
 export enum TodoStatus {
   IN_PROGRESS = 'IN_PROGRESS', // 🌱 진행중
   DEFERRED = 'DEFERRED', // ⌛ 미뤄둠
@@ -13,12 +15,4 @@ export enum DeferReason {
   OTHER = 'OTHER', // 💬 다른 이유
 }
 
-export interface Todo {
-  id: string;
-  content: string;
-  status: TodoStatus;
-  deferCount: number;
-  deferReason?: DeferReason;
-  createdAt: string;
-  updatedAt: string;
-}
+export type Todo = typeof todo.$inferSelect;

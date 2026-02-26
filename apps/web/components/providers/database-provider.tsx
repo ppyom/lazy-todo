@@ -9,8 +9,7 @@ import {
 } from 'react';
 
 import { getDb, runMigrations } from '@/db/local';
-
-type DbInstance = Awaited<ReturnType<typeof getDb>>;
+import type { DbInstance } from '@/types/database';
 
 const DatabaseContext = createContext<DbInstance | null>(null);
 
