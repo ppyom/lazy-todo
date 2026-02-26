@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 
 import { cn } from '@/lib/utils/cn';
+import DatabaseProvider from '@/components/providers/database-provider';
 import TodoRecoveryProvider from '@/components/providers/todo-recovery-provider';
 
 import './globals.css';
@@ -38,7 +39,9 @@ export default function RootLayout({ children }: Readonly<Props>) {
           'h-dvh bg-gray-100 overscroll-none overflow-hidden',
         )}
       >
-        <TodoRecoveryProvider>{children}</TodoRecoveryProvider>
+        <DatabaseProvider>
+          <TodoRecoveryProvider>{children}</TodoRecoveryProvider>
+        </DatabaseProvider>
       </body>
     </html>
   );
