@@ -1,8 +1,11 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { eq, sql } from 'drizzle-orm';
+import { v4 as uuid } from 'uuid';
 
-import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useDb } from '@/components/providers/database-provider';
+import { todo } from '@/db/local/schema';
 import { type Todo, TodoStatus } from '@/types/todo';
 
 /**
@@ -10,10 +13,17 @@ import { type Todo, TodoStatus } from '@/types/todo';
  * @returns todo 관련 상태와 핸들러 객체
  */
 export function useTodoList() {
-  const [todoList, setTodoList] = useLocalStorage<Todo[]>('todos', []);
-  const sortedTodoList = useMemo<Todo[]>(() => {
+  const db = useDb();
+  const [todoList, setTodoList] = useState<(typeof todo.$inferSelect)[]>([]);
+
+  const fetchTodo = async () => {
+    const result = await db.select().from(todo);
+    setTodoList(result);
+  };
+
+  const sortedTodoList = useMemo<(typeof todo.$inferSelect)[]>(() => {
     return [...todoList].sort((a, b) => {
-      // 1. 상태 우선순위 설정
+      // 1. 상태 우선순위
       const statusPriority: Record<TodoStatus, number> = {
         [TodoStatus.IN_PROGRESS]: 1,
         [TodoStatus.DEFERRED]: 2,
@@ -21,81 +31,68 @@ export function useTodoList() {
         [TodoStatus.COMPLETED]: 4,
       };
 
-      // 2. 상태가 다르면 상태 우선순위대로 정렬 (진행중이 가장 위)
+      // 2. 상태 우선순위가 다르면 즉시 반환
       if (statusPriority[a.status] !== statusPriority[b.status]) {
         return statusPriority[a.status] - statusPriority[b.status];
       }
 
-      // 3. 상태가 같으면(예: 둘 다 진행중) 최신순으로 정렬
-      // 저장된 날짜 문자열을 숫자로 바꿔서 비교 (더 큰 숫자 = 더 최근 시간)
-      const timeA = new Date(a.updatedAt || a.createdAt).getTime();
-      const timeB = new Date(b.updatedAt || b.createdAt).getTime();
+      // 3. 상태가 같을 때: 날짜 비교
+      const dateA = a.updatedAt || a.createdAt || '';
+      const dateB = b.updatedAt || b.createdAt || '';
 
-      return timeB - timeA; // 내림차순 정렬: 최신 아이템이 위로!
+      // 내림차순 (최신순): B가 A보다 크면(최신이면) 앞으로 보냄
+      return dateB.localeCompare(dateA);
     });
   }, [todoList]);
 
-  const handleStatusChange = (id: string, status: Todo['status']) => {
-    setTodoList((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status,
-              deferReason: undefined,
-              updatedAt: new Date().toString(),
-              deferCount: 0,
-            }
-          : item,
-      ),
-    );
-  };
-  const handleDefer = (id: string, reason: Todo['deferReason']) => {
-    setTodoList((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: TodoStatus.DEFERRED,
-              deferReason: reason,
-              deferCount: item.deferCount + 1,
-              updatedAt: new Date().toString(),
-            }
-          : item,
-      ),
-    );
-  };
-  const handleCleanup = (id: string) => {
-    setTodoList((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: TodoStatus.ARCHIVED,
-              deferReason: undefined,
-              updatedAt: new Date().toString(),
-              deferCount: 0,
-            }
-          : item,
-      ),
-    );
-  };
-  const handleDelete = (id: string) => {
-    setTodoList((prev) => prev.filter((item) => item.id !== id));
-  };
-  const handleAdd = (content: string) => {
-    setTodoList((prev) => [
-      ...prev,
-      {
-        id: Date.now().toString(),
-        content,
-        status: TodoStatus.IN_PROGRESS,
+  const handleStatusChange = async (id: string, status: Todo['status']) => {
+    await db
+      .update(todo)
+      .set({
+        status,
+        deferReason: null,
         deferCount: 0,
-        createdAt: new Date().toString(),
-        updatedAt: new Date().toString(),
-      },
-    ]);
+      })
+      .where(eq(todo.id, id));
+    await fetchTodo();
   };
+  const handleDefer = async (id: string, reason: Todo['deferReason']) => {
+    await db
+      .update(todo)
+      .set({
+        status: TodoStatus.DEFERRED,
+        deferReason: reason,
+        deferCount: sql`${todo.deferCount} + 1`,
+      })
+      .where(eq(todo.id, id));
+    await fetchTodo();
+  };
+  const handleCleanup = async (id: string) => {
+    await db
+      .update(todo)
+      .set({
+        status: TodoStatus.ARCHIVED,
+        deferReason: null,
+        deferCount: 0,
+      })
+      .where(eq(todo.id, id));
+    await fetchTodo();
+  };
+  const handleDelete = async (id: string) => {
+    await db.delete(todo).where(eq(todo.id, id));
+    await fetchTodo();
+  };
+  const handleAdd = async (content: string) => {
+    await db.insert(todo).values({
+      id: uuid(),
+      content,
+    });
+    await fetchTodo();
+  };
+
+  useEffect(() => {
+    (async () => fetchTodo())();
+  }, []);
 
   return {
     todoList: sortedTodoList,
