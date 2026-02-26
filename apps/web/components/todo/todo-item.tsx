@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { defferReasonMap, getEmojiLabel, statusMap } from '@/lib/todo';
 import { Badge, Checkbox } from '@/components/ui';
-import { type Todo, TodoStatus } from '@/types/todo';
+import { DeferReason, type Todo, TodoStatus } from '@/types/todo';
 
 import CleanupAction from './cleanup-action';
 import DeferAction from './defer-action';
@@ -14,8 +14,8 @@ interface Props {
   todo: Todo;
   showBadge?: boolean;
 
-  onStatusChange?: (id: string, status: Todo['status']) => void;
-  onDefer?: (id: string, reason: Todo['deferReason']) => void;
+  onStatusChange?: (id: string, status: TodoStatus) => void;
+  onDefer?: (id: string, reason: DeferReason) => void;
   onCleanup?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
