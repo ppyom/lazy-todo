@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { reviewService } from '@/services/review';
 import { dayjs } from '@/lib/dayjs';
-import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useDb } from '@/components/providers/database-provider';
 import { type Review, ReviewEmoji } from '@/types/review';
 
 /**
@@ -11,7 +12,13 @@ import { type Review, ReviewEmoji } from '@/types/review';
  * @returns review 관련 상태와 핸들러 객체
  */
 export function useReviewList() {
-  const [reviewList, setReviewList] = useLocalStorage<Review[]>('reviews', []);
+  const db = useDb();
+  const [reviewList, setReviewList] = useState<Review[]>([]);
+
+  const fetchReview = async () => {
+    const result = await reviewService.getAllReview(db);
+    setReviewList(result);
+  };
 
   const sortedReviewList = useMemo(() => {
     return [...reviewList].sort(
@@ -25,30 +32,25 @@ export function useReviewList() {
     );
   }, [reviewList]);
 
-  const handleSave = (emoji: ReviewEmoji, comment: string) => {
-    const now = new Date();
-
+  const handleSave = async (emoji: ReviewEmoji, comment: string) => {
     if (todayReview) {
       // 수정
-      setReviewList((prev) =>
-        prev.map((review) =>
-          review.id === todayReview.id
-            ? { ...review, emoji, comment, updatedAt: now }
-            : review,
-        ),
-      );
+      await reviewService.updateReview(db, { emoji, comment });
     } else {
       // 작성
-      setReviewList((prev) => [
-        ...prev,
-        { id: Date.now().toString(), emoji, comment, createdAt: now },
-      ]);
+      await reviewService.createReview(db, { emoji, comment });
     }
+    await fetchReview();
   };
 
-  const handleDelete = (id: string) => {
-    setReviewList((prev) => prev.filter((review) => review.id !== id));
+  const handleDelete = async (id: string) => {
+    await reviewService.deleteReview(db, id);
+    await fetchReview();
   };
+
+  useEffect(() => {
+    (async () => fetchReview())();
+  }, []);
 
   return {
     reviewList: sortedReviewList,

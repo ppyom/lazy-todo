@@ -1,12 +1,12 @@
-import type { Todo } from '@/types/todo';
+import { DeferReason, type Todo, TodoStatus } from '@/types/todo';
 
 import TodoItem from './todo-item';
 
 interface Props {
   todos: Todo[];
 
-  onStatusChange?: (id: string, status: Todo['status']) => void;
-  onDefer?: (id: string, reason: Todo['deferReason']) => void;
+  onStatusChange?: (id: string, status: TodoStatus) => void;
+  onDefer?: (id: string, reason: DeferReason) => void;
   onCleanup?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
