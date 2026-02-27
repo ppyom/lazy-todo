@@ -11,6 +11,7 @@ export interface CreateTodoParams {
 export interface UpdateTodoStatusParams {
   id: string;
   status: TodoStatus;
+  keepDeferCount?: boolean;
 }
 export interface DeferTodoParams {
   id: string;
@@ -24,10 +25,17 @@ export const todoService = {
       id: uuid(),
       content,
     }),
-  updateStatus: (db: DbInstance, { id, status }: UpdateTodoStatusParams) =>
+  updateStatus: (
+    db: DbInstance,
+    { id, status, keepDeferCount }: UpdateTodoStatusParams,
+  ) =>
     db
       .update(todo)
-      .set({ status, deferReason: null, deferCount: 0 })
+      .set({
+        status,
+        deferReason: null,
+        deferCount: keepDeferCount ? undefined : 0,
+      })
       .where(eq(todo.id, id)),
   updateDeferStatus: (db: DbInstance, { id, reason }: DeferTodoParams) =>
     db

@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 
 import { cn } from '@/lib/utils/cn';
 import DatabaseProvider from '@/components/providers/database-provider';
+import { TodoListProvider } from '@/components/providers/todo-list-provider';
 import TodoRecoveryProvider from '@/components/providers/todo-recovery-provider';
 
 import './globals.css';
@@ -40,7 +41,9 @@ export default function RootLayout({ children }: Readonly<Props>) {
         )}
       >
         <DatabaseProvider>
-          <TodoRecoveryProvider>{children}</TodoRecoveryProvider>
+          <TodoListProvider>
+            <TodoRecoveryProvider>{children}</TodoRecoveryProvider>
+          </TodoListProvider>
         </DatabaseProvider>
       </body>
     </html>
