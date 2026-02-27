@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
           deferReason: sql`excluded.defer_reason`,
           updatedAt: sql`excluded.updated_at`,
         },
-        setWhere: sql`excluded.updated_at > ${todo.updated_at}`,
+        setWhere: sql`excluded.updated_at > ${todo.updatedAt}`,
       });
 
     return NextResponse.json({ success: true, count: items.length });
