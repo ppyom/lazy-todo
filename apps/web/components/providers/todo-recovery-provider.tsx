@@ -11,32 +11,40 @@ interface Props {
 }
 
 export default function TodoRecoveryProvider({ children }: Props) {
-  const { todoList, handleStatusChange } = useTodoList();
+  const { todoList, handleStatusChange, fetchTodo } = useTodoList();
   const isChecked = useRef(false);
 
   useEffect(() => {
     if (todoList.length === 0 || isChecked.current) return;
 
-    const startOfToday = dayjs().startOf('day');
-    const expiredTodoList = todoList.filter((todo) => {
-      if (todo.status !== TodoStatus.DEFERRED || !todo.updatedAt) return false;
+    const checkAndRecoverTodos = async () => {
+      isChecked.current = true;
 
-      const lastUpdate = dayjs(todo.updatedAt).startOf('day');
-      return lastUpdate.isBefore(startOfToday);
-    });
+      const startOfToday = dayjs().startOf('second');
+      const expiredTodoList = todoList.filter((todo) => {
+        if (todo.status !== TodoStatus.DEFERRED || !todo.updatedAt)
+          return false;
 
-    if (expiredTodoList.length > 0) {
-      expiredTodoList.forEach((todo) => {
-        handleStatusChange(todo.id, TodoStatus.IN_PROGRESS);
+        const lastUpdate = dayjs(todo.updatedAt).startOf('day');
+        return lastUpdate.isBefore(startOfToday);
       });
 
-      console.log(
-        `🌅 어제 미룬 ${expiredTodoList.length}개의 할 일을 다시 활성화했어요!`,
-      );
-    }
+      if (expiredTodoList.length > 0) {
+        await Promise.all(
+          expiredTodoList.map((todo) =>
+            handleStatusChange(todo.id, TodoStatus.IN_PROGRESS, true),
+          ),
+        );
+        await fetchTodo();
 
-    isChecked.current = true;
-  }, [todoList, handleStatusChange]);
+        console.log(
+          `🌅 어제 미룬 ${expiredTodoList.length}개의 할 일을 다시 활성화했어요!`,
+        );
+      }
+    };
+
+    checkAndRecoverTodos();
+  }, [todoList, handleStatusChange, fetchTodo]);
 
   return <>{children}</>;
 }
