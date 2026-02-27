@@ -43,8 +43,12 @@ export function useTodoList() {
     });
   }, [todoList]);
 
-  const handleStatusChange = async (id: string, status: TodoStatus) => {
-    await todoService.updateStatus(db, { id, status });
+  const handleStatusChange = async (
+    id: string,
+    status: TodoStatus,
+    keepDeferCount?: boolean,
+  ) => {
+    await todoService.updateStatus(db, { id, status, keepDeferCount });
     await fetchTodo();
   };
   const handleDefer = async (id: string, reason: DeferReason) => {
