@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "db:generate": "npx drizzle-kit generate && tsx scripts/generate-migration-ts.ts"
+    "db:generate": "npx drizzle-kit generate && tsx scripts/generate-migration-ts.ts",
+    "server:db:generate": "drizzle-kit generate --config=drizzle.server.config.ts",
+    "server:db:migrate": "drizzle-kit migrate --config=drizzle.server.config.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@sqlite.org/sqlite-wasm": "^3.51.2-build6",
     "dayjs": "^1.11.19",
     "drizzle-orm": "^0.45.1",
