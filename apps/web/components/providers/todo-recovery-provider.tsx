@@ -20,7 +20,7 @@ export default function TodoRecoveryProvider({ children }: Props) {
     const checkAndRecoverTodos = async () => {
       isChecked.current = true;
 
-      const startOfToday = dayjs().startOf('second');
+      const startOfToday = dayjs().startOf('day');
       const expiredTodoList = todoList.filter((todo) => {
         if (todo.status !== TodoStatus.DEFERRED || !todo.updatedAt)
           return false;
