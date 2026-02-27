@@ -1,17 +1,11 @@
 'use client';
 
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 
 import { getDb, runMigrations } from '@/db/local';
 import type { DbInstance } from '@/types/database';
 
-const DatabaseContext = createContext<DbInstance | null>(null);
+export const DatabaseContext = createContext<DbInstance | null>(null);
 
 export default function DatabaseProvider({
   children,
@@ -41,9 +35,3 @@ export default function DatabaseProvider({
     <DatabaseContext.Provider value={db}>{children}</DatabaseContext.Provider>
   );
 }
-
-export const useDb = () => {
-  const context = useContext(DatabaseContext);
-  if (!context) throw new Error('useDb must be used within a DatabaseProvider');
-  return context;
-};

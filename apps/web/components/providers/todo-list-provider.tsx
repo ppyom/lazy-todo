@@ -9,7 +9,7 @@ import {
 } from 'react';
 
 import { todoService } from '@/services/todo';
-import { useDb } from '@/components/providers/database-provider';
+import { useDb } from '@/hooks/use-db';
 import { DeferReason, type Todo, TodoStatus } from '@/types/todo';
 
 type TodoListContextValue = {

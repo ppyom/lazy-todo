@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { reviewService } from '@/services/review';
 import { dayjs } from '@/lib/dayjs';
-import { useDb } from '@/components/providers/database-provider';
+import { useDb } from '@/hooks/use-db';
 import { type Review, ReviewEmoji } from '@/types/review';
 
 /**
