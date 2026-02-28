@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
     const items = await serverDb
       .select()
       .from(todo)
-      .where(eq(todo.userId, token.id as string));
+      .where(eq(todo.userId, token.id));
 
     return NextResponse.json({ success: true, items });
   } catch (error) {

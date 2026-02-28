@@ -80,7 +80,7 @@ export async function GET(req: NextRequest) {
     const items = await serverDb
       .select()
       .from(review)
-      .where(eq(review.userId, token.id as string));
+      .where(eq(review.userId, token.id));
 
     return NextResponse.json({ success: true, items });
   } catch (error) {
