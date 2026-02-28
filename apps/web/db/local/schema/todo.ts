@@ -18,5 +18,6 @@ export const todo = sqliteTable('todo', {
   updatedAt: text('updated_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
+  deletedAt: text('deleted_at'),
   isSynced: integer('is_synced').default(0),
 });
