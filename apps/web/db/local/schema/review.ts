@@ -12,7 +12,8 @@ export const review = sqliteTable('review', {
     .notNull(),
   updatedAt: text('updated_at')
     .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+    .notNull()
+    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
   deletedAt: text('deleted_at'),
   isSynced: integer('is_synced').default(0),
 });
