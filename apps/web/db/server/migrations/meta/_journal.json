@@ -15,6 +15,13 @@
       "when": 1772252185775,
       "tag": "0001_nebulous_colleen_wing",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772255070362,
+      "tag": "0002_chemical_turbo",
+      "breakpoints": true
     }
   ]
 }
