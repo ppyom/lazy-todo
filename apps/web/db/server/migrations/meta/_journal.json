@@ -22,6 +22,13 @@
       "when": 1772255070362,
       "tag": "0002_chemical_turbo",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772256895119,
+      "tag": "0003_wise_toro",
+      "breakpoints": true
     }
   ]
 }

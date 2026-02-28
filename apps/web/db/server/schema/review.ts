@@ -2,8 +2,13 @@ import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { ReviewEmoji } from '@/types/review';
 
+import { user } from './user';
+
 export const review = pgTable('review', {
   id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
   emoji: text('emoji').$type<ReviewEmoji>().notNull(),
   comment: text('comment'),
   createdAt: timestamp('created_at', { withTimezone: true })
@@ -13,6 +18,4 @@ export const review = pgTable('review', {
     .defaultNow()
     .notNull(),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
-  // 추후 인증 도입 시 활성화
-  // userId: text('user_id').notNull(),
 });
