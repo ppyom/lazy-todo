@@ -13,12 +13,12 @@ export const todo = sqliteTable('todo', {
   deferCount: integer('defer_count').default(0).notNull(),
   deferReason: text('defer_reason').$type<DeferReason>(),
   createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
+    .default(sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`)
     .notNull(),
   updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
+    .default(sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`)
     .notNull()
-    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
+    .$onUpdateFn(() => sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`),
   deletedAt: text('deleted_at'),
   isSynced: integer('is_synced').default(0),
 });
