@@ -32,7 +32,7 @@ export const TodoListContext = createContext<TodoListContextValue | null>(null);
 
 export function TodoListProvider({ children }: { children: React.ReactNode }) {
   const db = useDb();
-  const { sync } = useSync();
+  const { sync, syncStatus } = useSync();
   const [todoList, setTodoList] = useState<Todo[]>([]);
 
   const fetchTodo = useCallback(async () => {
@@ -95,7 +95,7 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     (() => fetchTodo())();
-  }, [fetchTodo]);
+  }, [syncStatus, fetchTodo]);
 
   return (
     <TodoListContext.Provider
