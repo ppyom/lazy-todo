@@ -17,6 +17,7 @@ export const todo = pgTable('todo', {
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
   // 추후 인증 도입 시 활성화
   // userId: text('user_id').notNull(),
 });
