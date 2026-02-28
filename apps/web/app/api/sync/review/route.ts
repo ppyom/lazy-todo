@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
           comment: item.comment,
           createdAt: new Date(item.createdAt),
           updatedAt: new Date(item.updatedAt),
+          deletedAt: item.deletedAt ? new Date(item.deletedAt) : null,
         })),
       )
       .onConflictDoUpdate({
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
           emoji: sql`excluded.emoji`,
           comment: sql`excluded.comment`,
           updatedAt: sql`excluded.updated_at`,
+          deletedAt: sql`excluded.deleted_at`,
         },
         setWhere: sql`excluded.updated_at > ${review.updatedAt}`,
       });

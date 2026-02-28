@@ -74,6 +74,9 @@ const pullTodo = async (db: DbInstance): Promise<void> => {
         // 서버의 Date 객체 → 로컬 SQLite text 형식으로 변환
         createdAt: new Date(item.createdAt).toISOString(),
         updatedAt: new Date(item.updatedAt).toISOString(),
+        deletedAt: item.deletedAt
+          ? new Date(item.deletedAt).toISOString()
+          : null,
         isSynced: 1,
       })),
     )
@@ -86,6 +89,7 @@ const pullTodo = async (db: DbInstance): Promise<void> => {
         deferCount: sql`excluded.defer_count`,
         deferReason: sql`excluded.defer_reason`,
         updatedAt: sql`excluded.updated_at`,
+        deletedAt: sql`excluded.deleted_at`,
         isSynced: 1,
       },
       setWhere: sql`excluded.updated_at > ${localTodo.updatedAt}`,
@@ -106,6 +110,9 @@ const pullReview = async (db: DbInstance): Promise<void> => {
         ...item,
         createdAt: new Date(item.createdAt).toISOString(),
         updatedAt: new Date(item.updatedAt).toISOString(),
+        deletedAt: item.deletedAt
+          ? new Date(item.deletedAt).toISOString()
+          : null,
         isSynced: 1,
       })),
     )
@@ -115,6 +122,7 @@ const pullReview = async (db: DbInstance): Promise<void> => {
         emoji: sql`excluded.emoji`,
         comment: sql`excluded.comment`,
         updatedAt: sql`excluded.updated_at`,
+        deletedAt: sql`excluded.deleted_at`,
         isSynced: 1,
       },
       setWhere: sql`excluded.updated_at > ${localReview.updatedAt}`,
