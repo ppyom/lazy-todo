@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { reviewService } from '@/services/review';
 import { dayjs } from '@/lib/dayjs';
 import { useDb } from '@/hooks/use-db';
+import { useSync } from '@/hooks/use-sync';
 import { type Review, ReviewEmoji } from '@/types/review';
 
 /**
@@ -13,6 +14,7 @@ import { type Review, ReviewEmoji } from '@/types/review';
  */
 export function useReviewList() {
   const db = useDb();
+  const { sync } = useSync();
   const [reviewList, setReviewList] = useState<Review[]>([]);
 
   const fetchReview = async () => {
@@ -34,18 +36,18 @@ export function useReviewList() {
 
   const handleSave = async (emoji: ReviewEmoji, comment: string) => {
     if (todayReview) {
-      // 수정
       await reviewService.updateReview(db, { emoji, comment });
     } else {
-      // 작성
       await reviewService.createReview(db, { emoji, comment });
     }
     await fetchReview();
+    await sync();
   };
 
   const handleDelete = async (id: string) => {
     await reviewService.deleteReview(db, id);
     await fetchReview();
+    await sync();
   };
 
   useEffect(() => {
