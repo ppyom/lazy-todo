@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from 'drizzle-orm';
+import { getToken } from 'next-auth/jwt';
+import { eq, sql } from 'drizzle-orm';
 
 import { serverDb } from '@/db/server';
 import { todo } from '@/db/server/schema';
@@ -12,6 +13,13 @@ import type { Todo } from '@/types/todo';
  */
 export async function POST(req: NextRequest) {
   try {
+    const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+    if (!token?.id) {
+      return NextResponse.json(
+        { success: false, error: '인증이 필요합니다.' },
+        { status: 401 },
+      );
+    }
     const { items }: { items: Todo[] } = await req.json();
 
     if (!items?.length) {
@@ -23,6 +31,7 @@ export async function POST(req: NextRequest) {
       .values(
         items.map((item) => ({
           id: item.id,
+          userId: token.id,
           content: item.content,
           status: item.status,
           deferCount: item.deferCount,
@@ -60,9 +69,21 @@ export async function POST(req: NextRequest) {
  * GET /api/sync/todo
  * 서버에서 로컬로 Pull
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const items = await serverDb.select().from(todo);
+    const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+    if (!token?.id) {
+      return NextResponse.json(
+        { success: false, error: '인증이 필요합니다.' },
+        { status: 401 },
+      );
+    }
+
+    // 해당 유저 데이터만 Pull
+    const items = await serverDb
+      .select()
+      .from(todo)
+      .where(eq(todo.userId, token.id as string));
 
     return NextResponse.json({ success: true, items });
   } catch (error) {
