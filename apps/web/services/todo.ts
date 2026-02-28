@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { eq, isNull, sql } from 'drizzle-orm';
 import { v4 as uuid } from 'uuid';
 
 import { todo } from '@/db/local/schema';
@@ -19,7 +19,8 @@ export interface DeferTodoParams {
 }
 
 export const todoService = {
-  getAllTodo: (db: DbInstance) => db.select().from(todo),
+  getAllTodo: (db: DbInstance) =>
+    db.select().from(todo).where(isNull(todo.deletedAt)),
   createTodo: (db: DbInstance, { content }: CreateTodoParams) =>
     db.insert(todo).values({
       id: uuid(),
@@ -47,5 +48,8 @@ export const todoService = {
       })
       .where(eq(todo.id, id)),
   deleteTodo: (db: DbInstance, id: string) =>
-    db.delete(todo).where(eq(todo.id, id)),
+    db
+      .update(todo)
+      .set({ deletedAt: sql`CURRENT_TIMESTAMP`, isSynced: 0 })
+      .where(eq(todo.id, id)),
 };

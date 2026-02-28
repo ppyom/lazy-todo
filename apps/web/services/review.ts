@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { eq, isNull, sql } from 'drizzle-orm';
 import { v4 as uuid } from 'uuid';
 
 import { review } from '@/db/local/schema';
@@ -11,7 +11,8 @@ export interface CreateAndUpdateReviewParams {
 }
 
 export const reviewService = {
-  getAllReview: (db: DbInstance) => db.select().from(review),
+  getAllReview: (db: DbInstance) =>
+    db.select().from(review).where(isNull(review.deletedAt)),
   createReview: (
     db: DbInstance,
     { emoji, comment }: CreateAndUpdateReviewParams,
@@ -33,5 +34,8 @@ export const reviewService = {
       })
       .where(eq(sql`date(${review.createdAt})`, sql`date('now', 'localtime')`)),
   deleteReview: (db: DbInstance, id: string) =>
-    db.delete(review).where(eq(review.id, id)),
+    db
+      .update(review)
+      .set({ deletedAt: sql`CURRENT_TIMESTAMP`, isSynced: 0 })
+      .where(eq(review.id, id)),
 };
