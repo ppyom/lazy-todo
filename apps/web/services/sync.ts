@@ -125,7 +125,7 @@ const pullReview = async (db: DbInstance): Promise<void> => {
         deletedAt: sql`excluded.deleted_at`,
         isSynced: 1,
       },
-      setWhere: sql`excluded.updated_at > ${localReview.updatedAt}`,
+      setWhere: sql`excluded.deleted_at IS NOT NULL OR excluded.updated_at > ${localReview.updatedAt}`,
     });
 };
 

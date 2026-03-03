@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
           updatedAt: sql`excluded.updated_at`,
           deletedAt: sql`excluded.deleted_at`,
         },
-        setWhere: sql`excluded.updated_at > ${review.updatedAt}`,
+        setWhere: sql`excluded.deleted_at IS NOT NULL OR excluded.updated_at > ${review.updatedAt}`,
       });
 
     return NextResponse.json({ success: true, count: items.length });
