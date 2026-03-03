@@ -14,7 +14,7 @@ import { type Review, ReviewEmoji } from '@/types/review';
  */
 export function useReviewList() {
   const db = useDb();
-  const { sync } = useSync();
+  const { sync, syncStatus } = useSync();
   const [reviewList, setReviewList] = useState<Review[]>([]);
 
   const fetchReview = async () => {
@@ -51,8 +51,9 @@ export function useReviewList() {
   };
 
   useEffect(() => {
+    if (syncStatus !== 'success') return;
     (async () => fetchReview())();
-  }, []);
+  }, [syncStatus]);
 
   return {
     reviewList: sortedReviewList,

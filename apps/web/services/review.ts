@@ -31,11 +31,15 @@ export const reviewService = {
       .set({
         emoji,
         comment,
+        isSynced: 0,
       })
       .where(eq(sql`date(${review.createdAt})`, sql`date('now', 'localtime')`)),
   deleteReview: (db: DbInstance, id: string) =>
     db
       .update(review)
-      .set({ deletedAt: sql`CURRENT_TIMESTAMP`, isSynced: 0 })
+      .set({
+        deletedAt: sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`,
+        isSynced: 0,
+      })
       .where(eq(review.id, id)),
 };
