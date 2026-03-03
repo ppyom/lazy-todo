@@ -8,12 +8,14 @@ export const review = sqliteTable('review', {
   emoji: text('emoji').$type<ReviewEmoji>().notNull(),
   comment: text('comment'),
   createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
+    .default(sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`)
     .notNull(),
   updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
+    .default(sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`)
     .notNull()
-    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
+    .$onUpdateFn(() => sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`),
   deletedAt: text('deleted_at'),
-  isSynced: integer('is_synced').default(0),
+  isSynced: integer('is_synced')
+    .default(0)
+    .$onUpdateFn(() => 0),
 });

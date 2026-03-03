@@ -2,8 +2,13 @@ import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { DeferReason, TodoStatus } from '@/types/todo';
 
+import { user } from './user';
+
 export const todo = pgTable('todo', {
   id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
   content: text('content').notNull(),
   status: text('status')
     .$type<TodoStatus>()
@@ -18,6 +23,4 @@ export const todo = pgTable('todo', {
     .defaultNow()
     .notNull(),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
-  // 추후 인증 도입 시 활성화
-  // userId: text('user_id').notNull(),
 });

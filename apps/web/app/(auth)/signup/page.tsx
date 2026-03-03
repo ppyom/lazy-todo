@@ -1,3 +1,5 @@
+import SignupPage from '@/components/page/signup-page';
+
 export default function Page() {
-  return <div>회원가입</div>;
+  return <SignupPage />;
 }

@@ -10,6 +10,7 @@ import {
 
 import { todoService } from '@/services/todo';
 import { useDb } from '@/hooks/use-db';
+import { useSync } from '@/hooks/use-sync';
 import { DeferReason, type Todo, TodoStatus } from '@/types/todo';
 
 type TodoListContextValue = {
@@ -31,6 +32,7 @@ export const TodoListContext = createContext<TodoListContextValue | null>(null);
 
 export function TodoListProvider({ children }: { children: React.ReactNode }) {
   const db = useDb();
+  const { sync, syncStatus } = useSync();
   const [todoList, setTodoList] = useState<Todo[]>([]);
 
   const fetchTodo = useCallback(async () => {
@@ -57,49 +59,43 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
     });
   }, [todoList]);
 
-  const handleStatusChange = useCallback(
-    async (id: string, status: TodoStatus, keepDeferCount?: boolean) => {
-      await todoService.updateStatus(db, { id, status, keepDeferCount });
-      await fetchTodo();
-    },
-    [db, fetchTodo],
-  );
+  const handleStatusChange = async (
+    id: string,
+    status: TodoStatus,
+    keepDeferCount?: boolean,
+  ) => {
+    await todoService.updateStatus(db, { id, status, keepDeferCount });
+    await fetchTodo();
+    await sync();
+  };
 
-  const handleDefer = useCallback(
-    async (id: string, reason: DeferReason) => {
-      await todoService.updateDeferStatus(db, { id, reason });
-      await fetchTodo();
-    },
-    [db, fetchTodo],
-  );
+  const handleDefer = async (id: string, reason: DeferReason) => {
+    await todoService.updateDeferStatus(db, { id, reason });
+    await fetchTodo();
+    await sync();
+  };
 
-  const handleCleanup = useCallback(
-    async (id: string) => {
-      await todoService.updateStatus(db, { id, status: TodoStatus.ARCHIVED });
-      await fetchTodo();
-    },
-    [db, fetchTodo],
-  );
+  const handleCleanup = async (id: string) => {
+    await todoService.updateStatus(db, { id, status: TodoStatus.ARCHIVED });
+    await fetchTodo();
+    await sync();
+  };
 
-  const handleDelete = useCallback(
-    async (id: string) => {
-      await todoService.deleteTodo(db, id);
-      await fetchTodo();
-    },
-    [db, fetchTodo],
-  );
+  const handleDelete = async (id: string) => {
+    await todoService.deleteTodo(db, id);
+    await fetchTodo();
+    await sync();
+  };
 
-  const handleAdd = useCallback(
-    async (content: string) => {
-      await todoService.createTodo(db, { content });
-      await fetchTodo();
-    },
-    [db, fetchTodo],
-  );
+  const handleAdd = async (content: string) => {
+    await todoService.createTodo(db, { content });
+    await fetchTodo();
+    await sync();
+  };
 
   useEffect(() => {
     (() => fetchTodo())();
-  }, [fetchTodo]);
+  }, [syncStatus, fetchTodo]);
 
   return (
     <TodoListContext.Provider
