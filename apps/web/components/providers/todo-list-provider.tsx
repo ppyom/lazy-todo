@@ -94,6 +94,7 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    if (syncStatus !== 'success') return;
     (() => fetchTodo())();
   }, [syncStatus, fetchTodo]);
 

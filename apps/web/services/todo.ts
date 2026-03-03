@@ -36,6 +36,7 @@ export const todoService = {
         status,
         deferReason: null,
         deferCount: keepDeferCount ? undefined : 0,
+        isSynced: 0,
       })
       .where(eq(todo.id, id)),
   updateDeferStatus: (db: DbInstance, { id, reason }: DeferTodoParams) =>
@@ -45,11 +46,15 @@ export const todoService = {
         status: TodoStatus.DEFERRED,
         deferReason: reason,
         deferCount: sql`${todo.deferCount} + 1`,
+        isSynced: 0,
       })
       .where(eq(todo.id, id)),
   deleteTodo: (db: DbInstance, id: string) =>
     db
       .update(todo)
-      .set({ deletedAt: sql`CURRENT_TIMESTAMP`, isSynced: 0 })
+      .set({
+        deletedAt: sql`(strftime('%Y-%m-%dT%H:%M:%S.000Z', 'now'))`,
+        isSynced: 0,
+      })
       .where(eq(todo.id, id)),
 };
