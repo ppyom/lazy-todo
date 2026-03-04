@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 import { reviewService } from '@/services/review';
 import { dayjs } from '@/lib/dayjs';
@@ -14,6 +15,7 @@ import { type Review, ReviewEmoji } from '@/types/review';
  */
 export function useReviewList() {
   const db = useDb();
+  const { status } = useSession();
   const { sync, syncStatus } = useSync();
   const [reviewList, setReviewList] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,6 +53,13 @@ export function useReviewList() {
     await fetchReview();
     await sync();
   };
+
+  // 비로그인 유저
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      (() => fetchReview())();
+    }
+  }, [status]);
 
   useEffect(() => {
     if (syncStatus !== 'success') return;
