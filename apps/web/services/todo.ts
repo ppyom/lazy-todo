@@ -57,4 +57,5 @@ export const todoService = {
         isSynced: 0,
       })
       .where(eq(todo.id, id)),
+  resetTodos: (db: DbInstance) => db.delete(todo),
 };
