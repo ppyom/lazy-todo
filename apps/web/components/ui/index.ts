@@ -5,3 +5,4 @@ export { default as Checkbox } from './checkbox';
 export { default as EmptyState } from './empty-state';
 export { default as Input } from './input';
 export { default as Modal } from './modal';
+export { default as Skeleton } from './skeleton';
