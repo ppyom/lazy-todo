@@ -16,6 +16,7 @@ import { DeferReason, type Todo, TodoStatus } from '@/types/todo';
 type TodoListContextValue = {
   todoList: Todo[];
   allTodoList: Todo[];
+  isLoading: boolean;
   handleAdd: (content: string) => Promise<void>;
   handleDelete: (id: string) => Promise<void>;
   handleDefer: (id: string, reason: DeferReason) => Promise<void>;
@@ -34,10 +35,12 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
   const db = useDb();
   const { sync, syncStatus } = useSync();
   const [todoList, setTodoList] = useState<Todo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchTodo = useCallback(async () => {
     const result = await todoService.getAllTodo(db);
     setTodoList(result);
+    setIsLoading(false);
   }, [db]);
 
   const sortedTodoList = useMemo<Todo[]>(() => {
@@ -103,6 +106,7 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
       value={{
         todoList: sortedTodoList,
         allTodoList: todoList,
+        isLoading,
         handleAdd,
         handleDelete,
         handleDefer,
