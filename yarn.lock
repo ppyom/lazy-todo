@@ -6253,6 +6253,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"wa-sqlite@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "wa-sqlite@npm:1.0.0"
+  dependenciesMeta:
+    comlink@4.4.1:
+      unplugged: true
+    monaco-editor@0.34.1:
+      unplugged: true
+    sinon@15.0.1:
+      unplugged: true
+  checksum: 10c0/04ebc5f98f31885bd041314a9d91fb399fbae1798a379afbb201bad3e0521fb26946f35cef8706114d618dc7b731a9b43473edd185adadd3bf25cc6f9a5142b0
+  languageName: node
+  linkType: hard
+
 "web@workspace:apps/web":
   version: 0.0.0-use.local
   resolution: "web@workspace:apps/web"
@@ -6282,6 +6296,7 @@ __metadata:
     tsx: "npm:^4.21.0"
     typescript: "npm:^5"
     uuid: "npm:^13.0.0"
+    wa-sqlite: "npm:^1.0.0"
   languageName: unknown
   linkType: soft
 
