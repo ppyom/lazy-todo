@@ -2,18 +2,35 @@
 
 import { useMounted } from '@/hooks/use-mounted';
 import { useReviewList } from '@/hooks/use-review-list';
+import { Skeleton } from '@/components/ui';
 import {
   AddReviewAction,
   ReviewEmptyState,
   ReviewList,
 } from '@/components/review';
 
+function ReviewSkeleton() {
+  return (
+    <div className="py-4 h-full flex flex-col gap-4">
+      <div className="flex-1 px-4 space-y-2">
+        <Skeleton className="h-[88px]" />
+        <Skeleton className="h-[88px]" />
+        <Skeleton className="h-[88px]" />
+      </div>
+      <div className="px-4">
+        <Skeleton className="h-[52px]" />
+      </div>
+    </div>
+  );
+}
+
 export default function ReviewPage() {
   const isMounted = useMounted();
-  const { reviewList, todayReview, handleSave, handleDelete } = useReviewList();
+  const { reviewList, todayReview, isLoading, handleSave, handleDelete } =
+    useReviewList();
 
-  if (!isMounted) {
-    return null;
+  if (!isMounted || isLoading) {
+    return <ReviewSkeleton />;
   }
 
   return (

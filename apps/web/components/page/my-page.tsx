@@ -8,8 +8,28 @@ import { todoService } from '@/services/todo';
 import { useDb } from '@/hooks/use-db';
 import { useSync } from '@/hooks/use-sync';
 import { useToast } from '@/hooks/use-toast';
-import { Alert } from '@/components/ui';
+import { Alert, Skeleton } from '@/components/ui';
 import { MenuItem, ResetAction, WithdrawAction } from '@/components/my';
+
+function MyPageSkeleton() {
+  return (
+    <div className="p-4 flex flex-col gap-6">
+      <Skeleton className="h-[72px]" />
+      <div className="bg-card p-4 rounded-2xl space-y-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-16 rounded-lg" />
+          <Skeleton className="h-5 w-40 rounded-lg" />
+        </div>
+        <div className="h-px bg-secondary" />
+        <Skeleton className="h-[46px]" />
+      </div>
+      <div className="bg-card p-4 rounded-2xl space-y-3">
+        <Skeleton className="h-[46px]" />
+        <Skeleton className="h-[46px]" />
+      </div>
+    </div>
+  );
+}
 
 export default function MyPage() {
   const { data: session, status } = useSession();
@@ -52,23 +72,7 @@ export default function MyPage() {
   };
 
   if (status === 'loading') {
-    return (
-      <div className="p-4 flex flex-col gap-6">
-        <div className="h-[72px] rounded-2xl bg-secondary/50 animate-pulse" />
-        <div className="bg-card p-4 rounded-2xl space-y-4">
-          <div className="space-y-2">
-            <div className="h-4 w-16 rounded-lg bg-secondary/50 animate-pulse" />
-            <div className="h-5 w-40 rounded-lg bg-secondary/50 animate-pulse" />
-          </div>
-          <div className="h-px bg-secondary" />
-          <div className="h-[46px] rounded-2xl bg-secondary/50 animate-pulse" />
-        </div>
-        <div className="bg-card p-4 rounded-2xl space-y-3">
-          <div className="h-[46px] rounded-2xl bg-secondary/50 animate-pulse" />
-          <div className="h-[46px] rounded-2xl bg-secondary/50 animate-pulse" />
-        </div>
-      </div>
-    );
+    return <MyPageSkeleton />;
   }
 
   return (
