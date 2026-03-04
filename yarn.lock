@@ -1375,13 +1375,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sqlite.org/sqlite-wasm@npm:^3.51.2-build6":
-  version: 3.51.2-build6
-  resolution: "@sqlite.org/sqlite-wasm@npm:3.51.2-build6"
-  checksum: 10c0/bf92b3d5c5c01363568225ec2f9a1b6b9659d12e0a21875b72b799c1bc6232d13e3a0b1e389b764205e07054113755bb5527e13c6678ff7699f8f640b2f3f14b
-  languageName: node
-  linkType: hard
-
 "@swc/helpers@npm:0.5.15":
   version: 0.5.15
   resolution: "@swc/helpers@npm:0.5.15"
@@ -6253,13 +6246,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"wa-sqlite@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "wa-sqlite@npm:1.0.0"
+  dependenciesMeta:
+    comlink@4.4.1:
+      unplugged: true
+    monaco-editor@0.34.1:
+      unplugged: true
+    sinon@15.0.1:
+      unplugged: true
+  checksum: 10c0/04ebc5f98f31885bd041314a9d91fb399fbae1798a379afbb201bad3e0521fb26946f35cef8706114d618dc7b731a9b43473edd185adadd3bf25cc6f9a5142b0
+  languageName: node
+  linkType: hard
+
 "web@workspace:apps/web":
   version: 0.0.0-use.local
   resolution: "web@workspace:apps/web"
   dependencies:
     "@neondatabase/serverless": "npm:^1.0.2"
     "@radix-ui/react-slot": "npm:^1.2.4"
-    "@sqlite.org/sqlite-wasm": "npm:^3.51.2-build6"
     "@tailwindcss/postcss": "npm:^4"
     "@types/bcrypt": "npm:^6.0.0"
     "@types/node": "npm:^20"
@@ -6282,6 +6288,7 @@ __metadata:
     tsx: "npm:^4.21.0"
     typescript: "npm:^5"
     uuid: "npm:^13.0.0"
+    wa-sqlite: "npm:^1.0.0"
   languageName: unknown
   linkType: soft
 

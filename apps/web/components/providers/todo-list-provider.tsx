@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { useSession } from 'next-auth/react';
@@ -38,11 +39,18 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
   const { sync, syncStatus } = useSync();
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isFetching = useRef(false);
 
   const fetchTodo = useCallback(async () => {
-    const result = await todoService.getAllTodo(db);
-    setTodoList(result);
-    setIsLoading(false);
+    if (isFetching.current) return;
+    isFetching.current = true;
+    try {
+      const result = await todoService.getAllTodo(db);
+      setTodoList(result);
+      setIsLoading(false);
+    } finally {
+      isFetching.current = false;
+    }
   }, [db]);
 
   const sortedTodoList = useMemo<Todo[]>(() => {
@@ -98,18 +106,12 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
     await sync();
   };
 
-  // 비로그인 유저
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    // 비로그인이거나 sync가 끝난 후 fetch
+    if (status === 'unauthenticated' || syncStatus === 'success') {
       (() => fetchTodo())();
     }
-  }, [status, fetchTodo]);
-
-  // 로그인 유저
-  useEffect(() => {
-    if (syncStatus !== 'success') return;
-    (() => fetchTodo())();
-  }, [syncStatus, fetchTodo]);
+  }, [status, syncStatus, fetchTodo]);
 
   return (
     <TodoListContext.Provider
