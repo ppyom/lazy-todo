@@ -16,7 +16,6 @@ export default function ResetAction({ onReset }: Props) {
   const handleReset = () => {
     onReset();
     setOpen(false);
-    // 초기화 완료
   };
 
   return (
@@ -32,6 +31,7 @@ export default function ResetAction({ onReset }: Props) {
         message="이 기기에 저장된 모든 기록이 삭제되지만 서버에 저장된 기록은 유지돼요."
         onClose={() => setOpen(false)}
         onDelete={handleReset}
+        deleteButtonText="초기화"
       />
     </>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { useToast } from '@/hooks/use-toast';
 import { Button, Modal } from '@/components/ui';
 
 import ModalOptionButton from './modal-option-button';
@@ -20,6 +21,7 @@ export default function CleanupModal({
   title = '3번 이상 미뤄졌어요.',
 }: Props) {
   const [confirmed, setConfirmed] = useState<boolean | null>(null);
+  const toast = useToast();
 
   const handleReset = () => {
     onClose();
@@ -28,12 +30,12 @@ export default function CleanupModal({
 
   const handleSave = () => {
     if (confirmed === null) {
-      // 이유를 선택해주세요!
+      toast.show('이유를 선택해주세요!');
       return;
     }
 
     onSave(confirmed);
-    // 저장되었습니다.
+    if (confirmed) toast.show('잘 정리했어요 🧹');
     handleReset();
   };
 

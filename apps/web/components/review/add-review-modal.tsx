@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { useToast } from '@/hooks/use-toast';
 import { Button, Input, Modal } from '@/components/ui';
 import type { Review, ReviewEmoji } from '@/types/review';
 
@@ -24,6 +25,7 @@ export default function AddReviewModal({
     null,
   );
   const [content, setContent] = useState<string>('');
+  const toast = useToast();
 
   const handleReset = () => {
     onClose();
@@ -32,12 +34,12 @@ export default function AddReviewModal({
   };
   const handleSave = () => {
     if (!selectedEmotion) {
-      // 오늘의 감정을 선택해주세요.
+      toast.show('감정을 선택해주세요!');
       return;
     }
 
     onSave(selectedEmotion, content);
-    // 저장되었습니다.
+    toast.show('오늘 하루도 기록했어요 ✏️');
     handleReset();
   };
 

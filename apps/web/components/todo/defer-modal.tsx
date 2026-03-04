@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { defferReasonMap } from '@/lib/todo';
 import { Button, Modal } from '@/components/ui';
+import { useToast } from '@/components/providers/toast-provider';
 import type { DeferReason } from '@/types/todo';
 
 import ModalOptionButton from './modal-option-button';
@@ -18,6 +19,8 @@ export default function DeferModal({ open, onClose, onSave }: Props) {
   const [selectedReason, setSelectedReason] = useState<DeferReason | null>(
     null,
   );
+  const toast = useToast();
+
   const handleReset = () => {
     onClose();
     setSelectedReason(null);
@@ -25,12 +28,12 @@ export default function DeferModal({ open, onClose, onSave }: Props) {
 
   const handleSave = () => {
     if (!selectedReason) {
-      // 이유를 선택해주세요!
+      toast.show('이유를 선택해주세요!');
       return;
     }
 
     onSave(selectedReason);
-    // 저장되었습니다.
+    toast.show('오늘은 넘어가요 ⌛');
     handleReset();
   };
 
