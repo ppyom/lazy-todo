@@ -8,6 +8,7 @@ interface Props {
   onDelete: () => void;
   title?: string;
   message?: string;
+  deleteButtonText?: string;
 }
 
 export default function DeleteModal({
@@ -16,6 +17,7 @@ export default function DeleteModal({
   onDelete,
   title = '정말 삭제할까요?',
   message = '이 기록은 영구적으로 사라지며, 다시 복구할 수 없어요.',
+  deleteButtonText = '삭제',
 }: Props) {
   return (
     <Modal open={open} onClose={onClose}>
@@ -28,7 +30,7 @@ export default function DeleteModal({
             className="flex-1 text-sm"
             onClick={onDelete}
           >
-            삭제
+            {deleteButtonText}
           </Button>
           <Button
             variant="secondary"

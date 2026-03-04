@@ -7,6 +7,7 @@ import { reviewService } from '@/services/review';
 import { todoService } from '@/services/todo';
 import { useDb } from '@/hooks/use-db';
 import { useSync } from '@/hooks/use-sync';
+import { useToast } from '@/hooks/use-toast';
 import { Alert } from '@/components/ui';
 import { MenuItem, ResetAction, WithdrawAction } from '@/components/my';
 
@@ -15,19 +16,27 @@ export default function MyPage() {
   const router = useRouter();
   const db = useDb();
   const { sync, syncStatus } = useSync();
+  const toast = useToast();
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
     router.replace('/login');
+    toast.show('다음에 또 봐요 🌙');
   };
 
   const handleSync = async () => {
     await sync();
+    toast.show(
+      syncStatus !== 'error'
+        ? '동기화 완료!'
+        : '동기화에 실패했어요. 잠시 후 다시 시도해주세요.',
+    );
   };
 
   const handleReset = async () => {
     await todoService.resetTodos(db);
     await reviewService.resetReviews(db);
+    toast.show('깨끗하게 비워졌어요 🧹');
   };
 
   const handleWithdraw = async () => {
@@ -38,6 +47,8 @@ export default function MyPage() {
     await reviewService.resetReviews(db);
     await signOut({ redirect: false });
     router.replace('/login');
+
+    toast.show('그동안 함께해줘서 고마워요 🐢');
   };
 
   if (status === 'loading') {

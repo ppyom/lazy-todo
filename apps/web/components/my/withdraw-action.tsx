@@ -16,7 +16,6 @@ export default function WithdrawAction({ onWithdraw }: Props) {
   const handleWithdraw = () => {
     onWithdraw();
     setOpen(false);
-    // 탈퇴되었습니다.
   };
 
   return (
@@ -32,6 +31,7 @@ export default function WithdrawAction({ onWithdraw }: Props) {
         message="탈퇴 시 서버에 저장된 모든 기록이 완전히 삭제되며 복구할 수 없어요."
         onClose={() => setOpen(false)}
         onDelete={handleWithdraw}
+        deleteButtonText="탈퇴"
       />
     </>
   );
