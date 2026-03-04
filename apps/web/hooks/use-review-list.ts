@@ -16,10 +16,12 @@ export function useReviewList() {
   const db = useDb();
   const { sync, syncStatus } = useSync();
   const [reviewList, setReviewList] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchReview = async () => {
     const result = await reviewService.getAllReview(db);
     setReviewList(result);
+    setIsLoading(false);
   };
 
   const sortedReviewList = useMemo(() => {
@@ -58,6 +60,7 @@ export function useReviewList() {
   return {
     reviewList: sortedReviewList,
     todayReview,
+    isLoading,
     handleSave,
     handleDelete,
   };
