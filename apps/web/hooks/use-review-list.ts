@@ -54,17 +54,12 @@ export function useReviewList() {
     await sync();
   };
 
-  // 비로그인 유저
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    // 비로그인이거나 sync가 끝난 후 fetch
+    if (status === 'unauthenticated' || syncStatus === 'success') {
       (() => fetchReview())();
     }
-  }, [status]);
-
-  useEffect(() => {
-    if (syncStatus !== 'success') return;
-    (async () => fetchReview())();
-  }, [syncStatus]);
+  }, [status, syncStatus]);
 
   return {
     reviewList: sortedReviewList,

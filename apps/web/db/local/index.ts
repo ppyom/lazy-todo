@@ -1,63 +1,47 @@
-import sqlite3InitModule, {
-  type Database,
-  type Sqlite3Static,
-} from '@sqlite.org/sqlite-wasm';
 import { drizzle } from 'drizzle-orm/sqlite-proxy';
+import * as SQLite from 'wa-sqlite';
+import SQLiteAsyncESMFactory from 'wa-sqlite/dist/wa-sqlite-async.mjs';
+import { IDBBatchAtomicVFS } from 'wa-sqlite/src/examples/IDBBatchAtomicVFS.js';
 
 import { migrations } from './migrations';
 import * as schema from './schema';
 
-let sqliteDb: Database | null = null;
+const DB_NAME = 'lazy_todo_v1';
+const VFS_NAME = 'lazy_todo_v1';
 
-/**
- * 1. SQLite 엔진 초기화 및 저장소 연결
- */
-const initEngine = async (): Promise<Database> => {
-  if (sqliteDb) return sqliteDb;
+type Engine = { sqlite3: SQLiteAPI; db: number };
 
-  const sqlite3: Sqlite3Static = await sqlite3InitModule();
+let engine: Engine | null = null;
 
-  // OPFS(Origin Private File System) 사용
-  if ('opfs' in sqlite3) {
-    sqliteDb = new sqlite3.oo1.OpfsDb('/lazy_todo_v1.sqlite3', 'c');
-    console.log('📦 SQLite Engine: OPFS Mode');
-  } else {
-    // OPFS 미지원 시 로컬스토리지 기반 (JsStorage)
-    sqliteDb = new sqlite3.oo1.JsStorageDb('local');
-    console.log('📦 SQLite Engine: LocalStorage Mode (Fallback)');
-  }
+const initEngine = async (): Promise<Engine> => {
+  if (engine) return engine;
 
-  return sqliteDb;
+  const wasmModule = await SQLiteAsyncESMFactory();
+  const sqlite3 = SQLite.Factory(wasmModule);
+  const vfs = new IDBBatchAtomicVFS(VFS_NAME);
+  sqlite3.vfs_register(vfs as Parameters<typeof sqlite3.vfs_register>[0]);
+  const db = await sqlite3.open_v2(DB_NAME, undefined, VFS_NAME);
+  engine = { sqlite3, db };
+  console.log('📦 SQLite Engine: IDBBatchAtomicVFS Mode');
+  return engine;
 };
 
-/**
- * 2. Drizzle 인스턴스 (Proxy)
- * Drizzle의 모든 SQL 호출을 SQLite WASM 엔진으로 전달합니다.
- */
 export const getDb = async () => {
-  const client = await initEngine();
+  const eng = await initEngine();
 
   return drizzle(
     async (sql, params, method) => {
       try {
-        // 결과가 필요 없는 실행 (insert, update, delete)
-        if (method === 'run') {
-          client.exec({ sql, bind: params });
-          return { rows: [] };
-        }
-
-        // 결과가 필요한 조회 (select)
         const rows: unknown[] = [];
-        client.exec({
-          sql,
-          bind: params,
-          rowMode: 'array',
-          callback: (row) => {
-            rows.push(row);
-          },
-        });
-
-        return { rows };
+        for await (const stmt of eng.sqlite3.statements(eng.db, sql)) {
+          if (params.length) {
+            eng.sqlite3.bind_collection(stmt, params as SQLiteCompatibleType[]);
+          }
+          while ((await eng.sqlite3.step(stmt)) === SQLite.SQLITE_ROW) {
+            rows.push(eng.sqlite3.row(stmt));
+          }
+        }
+        return { rows: method === 'run' ? [] : rows };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : error;
         console.error('❌ SQLite Proxy Error:', errorMessage);
@@ -68,13 +52,10 @@ export const getDb = async () => {
   );
 };
 
-/**
- * 3. 런타임 마이그레이션
- */
 export const runMigrations = async () => {
   if (typeof window === 'undefined') return;
 
-  const client = await initEngine();
+  const eng = await initEngine();
   console.log('🏗️ 마이그레이션 체크 중...');
 
   try {
@@ -85,12 +66,12 @@ export const runMigrations = async () => {
         .filter(Boolean);
 
       for (const statement of statements) {
-        // 중복 생성 방지를 위한 처리
         const safeSql = statement.replace(
           /CREATE TABLE /gi,
           'CREATE TABLE IF NOT EXISTS ',
         );
-        client.exec(safeSql);
+
+        await eng.sqlite3.exec(eng.db, safeSql);
       }
     }
     console.log('✅ 모든 마이그레이션 완료');
