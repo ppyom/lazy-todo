@@ -1375,13 +1375,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sqlite.org/sqlite-wasm@npm:^3.51.2-build6":
-  version: 3.51.2-build6
-  resolution: "@sqlite.org/sqlite-wasm@npm:3.51.2-build6"
-  checksum: 10c0/bf92b3d5c5c01363568225ec2f9a1b6b9659d12e0a21875b72b799c1bc6232d13e3a0b1e389b764205e07054113755bb5527e13c6678ff7699f8f640b2f3f14b
-  languageName: node
-  linkType: hard
-
 "@swc/helpers@npm:0.5.15":
   version: 0.5.15
   resolution: "@swc/helpers@npm:0.5.15"
@@ -6273,7 +6266,6 @@ __metadata:
   dependencies:
     "@neondatabase/serverless": "npm:^1.0.2"
     "@radix-ui/react-slot": "npm:^1.2.4"
-    "@sqlite.org/sqlite-wasm": "npm:^3.51.2-build6"
     "@tailwindcss/postcss": "npm:^4"
     "@types/bcrypt": "npm:^6.0.0"
     "@types/node": "npm:^20"
