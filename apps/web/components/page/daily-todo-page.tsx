@@ -1,0 +1,67 @@
+'use client';
+
+import { useMounted } from '@/hooks/use-mounted';
+import { useTodoList } from '@/hooks/use-todo-list';
+import { Skeleton } from '@/components/ui';
+import { NewTodoInput, TodoEmptyState, TodoList } from '@/components/todo';
+import { TodoStatus } from '@/types/todo';
+
+function DailyTodoSkeleton() {
+  return (
+    <div className="py-4 h-full flex flex-col gap-4">
+      <div className="flex-1 px-4 space-y-2">
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+      </div>
+      <div className="px-4">
+        <Skeleton className="h-[52px]" />
+      </div>
+    </div>
+  );
+}
+
+export default function DailyTodoPage() {
+  const isMounted = useMounted();
+  const {
+    todoList,
+    isLoading,
+    handleAdd,
+    handleDelete,
+    handleDefer,
+    handleCleanup,
+    handleStatusChange,
+  } = useTodoList();
+  const inProgressTodoList = todoList.filter(
+    (t) => t.status === TodoStatus.IN_PROGRESS,
+  );
+
+  if (!isMounted || isLoading) {
+    return <DailyTodoSkeleton />;
+  }
+
+  return (
+    <div
+      className="py-4 h-full flex flex-col gap-4"
+      style={{ overflowAnchor: 'none' }}
+    >
+      <div className="flex-1 px-4 overflow-y-auto">
+        {inProgressTodoList.length > 0 ? (
+          <TodoList
+            todos={inProgressTodoList}
+            onStatusChange={handleStatusChange}
+            onDefer={handleDefer}
+            onCleanup={handleCleanup}
+            onDelete={handleDelete}
+          />
+        ) : (
+          <TodoEmptyState />
+        )}
+      </div>
+      <div className="px-4">
+        <NewTodoInput onAdd={handleAdd} />
+      </div>
+    </div>
+  );
+}
