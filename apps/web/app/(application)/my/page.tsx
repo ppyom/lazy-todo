@@ -1,3 +1,5 @@
+import MyPage from '@/components/page/my-page';
+
 export default function Page() {
-  return <div>마이페이지</div>;
+  return <MyPage />;
 }

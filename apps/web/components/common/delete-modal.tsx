@@ -6,14 +6,22 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onDelete: () => void;
+  title?: string;
+  message?: string;
 }
 
-export default function DeleteModal({ open, onClose, onDelete }: Props) {
+export default function DeleteModal({
+  open,
+  onClose,
+  onDelete,
+  title = '정말 삭제할까요?',
+  message = '이 기록은 영구적으로 사라지며, 다시 복구할 수 없어요.',
+}: Props) {
   return (
     <Modal open={open} onClose={onClose}>
       <div className="flex flex-col gap-4">
-        <p className="font-bold text-center">정말 삭제할까요?</p>
-        <p>이 기록은 영구적으로 사라지며, 다시 복구할 수 없어요.</p>
+        <p className="font-bold text-center">{title}</p>
+        <p>{message}</p>
         <div className="flex gap-2">
           <Button
             variant="accent"

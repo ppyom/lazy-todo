@@ -42,4 +42,5 @@ export const reviewService = {
         isSynced: 0,
       })
       .where(eq(review.id, id)),
+  resetReviews: (db: DbInstance) => db.delete(review),
 };
