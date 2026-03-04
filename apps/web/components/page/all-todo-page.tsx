@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { useMounted } from '@/hooks/use-mounted';
 import { useTodoFilter } from '@/hooks/use-todo-filter';
 import { useTodoList } from '@/hooks/use-todo-list';
+import { Skeleton } from '@/components/ui';
 import {
   NewTodoInput,
   SearchTodoInput,
@@ -13,10 +14,35 @@ import {
   TodoStatusFilter,
 } from '@/components/todo';
 
+function AllTodoSkeleton() {
+  return (
+    <div className="py-4 h-full flex flex-col gap-4">
+      <div className="px-4 space-y-2">
+        <Skeleton className="h-[48px]" />
+        <div className="flex gap-2">
+          <Skeleton className="h-[36px] w-16" />
+          <Skeleton className="h-[36px] w-16" />
+          <Skeleton className="h-[36px] w-16" />
+        </div>
+      </div>
+      <div className="flex-1 px-4 space-y-2">
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+      </div>
+      <div className="px-4">
+        <Skeleton className="h-[52px]" />
+      </div>
+    </div>
+  );
+}
+
 export default function AllTodoPage() {
   const isMounted = useMounted();
   const {
     todoList,
+    isLoading,
     handleAdd,
     handleDelete,
     handleDefer,
@@ -36,8 +62,8 @@ export default function AllTodoPage() {
     });
   }, [todoList, searchQuery, selectedStatus]);
 
-  if (!isMounted) {
-    return null;
+  if (!isMounted || isLoading) {
+    return <AllTodoSkeleton />;
   }
 
   return (

@@ -2,13 +2,31 @@
 
 import { useMounted } from '@/hooks/use-mounted';
 import { useTodoList } from '@/hooks/use-todo-list';
+import { Skeleton } from '@/components/ui';
 import { NewTodoInput, TodoEmptyState, TodoList } from '@/components/todo';
 import { TodoStatus } from '@/types/todo';
+
+function DailyTodoSkeleton() {
+  return (
+    <div className="py-4 h-full flex flex-col gap-4">
+      <div className="flex-1 px-4 space-y-2">
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+        <Skeleton className="h-[58px]" />
+      </div>
+      <div className="px-4">
+        <Skeleton className="h-[52px]" />
+      </div>
+    </div>
+  );
+}
 
 export default function DailyTodoPage() {
   const isMounted = useMounted();
   const {
     todoList,
+    isLoading,
     handleAdd,
     handleDelete,
     handleDefer,
@@ -19,8 +37,8 @@ export default function DailyTodoPage() {
     (t) => t.status === TodoStatus.IN_PROGRESS,
   );
 
-  if (!isMounted) {
-    return null;
+  if (!isMounted || isLoading) {
+    return <DailyTodoSkeleton />;
   }
 
   return (
