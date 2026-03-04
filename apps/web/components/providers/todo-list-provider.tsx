@@ -7,6 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { useSession } from 'next-auth/react';
 
 import { todoService } from '@/services/todo';
 import { useDb } from '@/hooks/use-db';
@@ -33,6 +34,7 @@ export const TodoListContext = createContext<TodoListContextValue | null>(null);
 
 export function TodoListProvider({ children }: { children: React.ReactNode }) {
   const db = useDb();
+  const { status } = useSession();
   const { sync, syncStatus } = useSync();
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -96,6 +98,14 @@ export function TodoListProvider({ children }: { children: React.ReactNode }) {
     await sync();
   };
 
+  // 비로그인 유저
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      (() => fetchTodo())();
+    }
+  }, [status, fetchTodo]);
+
+  // 로그인 유저
   useEffect(() => {
     if (syncStatus !== 'success') return;
     (() => fetchTodo())();
