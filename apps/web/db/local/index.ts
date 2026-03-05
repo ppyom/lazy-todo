@@ -13,6 +13,14 @@ type Engine = { sqlite3: SQLiteAPI; db: number };
 
 let engine: Engine | null = null;
 
+let queryQueue: Promise<unknown> = Promise.resolve();
+
+const enqueue = <T>(fn: () => Promise<T>): Promise<T> => {
+  const result = queryQueue.then(fn);
+  queryQueue = result.catch(() => {});
+  return result;
+};
+
 const initEngine = async (): Promise<Engine> => {
   if (engine) return engine;
 
@@ -31,22 +39,27 @@ export const getDb = async () => {
 
   return drizzle(
     async (sql, params, method) => {
-      try {
-        const rows: unknown[] = [];
-        for await (const stmt of eng.sqlite3.statements(eng.db, sql)) {
-          if (params.length) {
-            eng.sqlite3.bind_collection(stmt, params as SQLiteCompatibleType[]);
+      return enqueue(async () => {
+        try {
+          const rows: unknown[] = [];
+          for await (const stmt of eng.sqlite3.statements(eng.db, sql)) {
+            if (params.length) {
+              eng.sqlite3.bind_collection(
+                stmt,
+                params as SQLiteCompatibleType[],
+              );
+            }
+            while ((await eng.sqlite3.step(stmt)) === SQLite.SQLITE_ROW) {
+              rows.push(eng.sqlite3.row(stmt));
+            }
           }
-          while ((await eng.sqlite3.step(stmt)) === SQLite.SQLITE_ROW) {
-            rows.push(eng.sqlite3.row(stmt));
-          }
+          return { rows: method === 'run' ? [] : rows };
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : error;
+          console.error('❌ SQLite Proxy Error:', errorMessage);
+          throw error;
         }
-        return { rows: method === 'run' ? [] : rows };
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : error;
-        console.error('❌ SQLite Proxy Error:', errorMessage);
-        throw error;
-      }
+      });
     },
     { schema },
   );
