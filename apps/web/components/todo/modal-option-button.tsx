@@ -20,7 +20,7 @@ export default function ModalOptionButton({
   return (
     <motion.button
       className={cn(
-        'block bg-card rounded-2xl p-4 w-full text-left space-x-2',
+        'block bg-card rounded-2xl p-3.5 w-full text-left space-x-2',
         active && 'bg-primary text-primary-foreground',
       )}
       whileTap={{ scale: 0.95 }}
