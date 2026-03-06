@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import { cn } from '@/lib/utils/cn';
 import AuthProvider from '@/components/providers/auth-provider';
 import DatabaseProvider from '@/components/providers/database-provider';
+import { SerwistProvider } from '@/components/providers/serwist-provider';
 import ToastProvider from '@/components/providers/toast-provider';
 import { TodoListProvider } from '@/components/providers/todo-list-provider';
 import TodoRecoveryProvider from '@/components/providers/todo-recovery-provider';
@@ -66,15 +67,17 @@ export default function RootLayout({ children }: Readonly<Props>) {
           'h-dvh bg-gray-100 overscroll-none overflow-hidden',
         )}
       >
-        <AuthProvider>
-          <DatabaseProvider>
-            <ToastProvider>
-              <TodoListProvider>
-                <TodoRecoveryProvider>{children}</TodoRecoveryProvider>
-              </TodoListProvider>
-            </ToastProvider>
-          </DatabaseProvider>
-        </AuthProvider>
+        <SerwistProvider swUrl="/serwist/sw.js">
+          <AuthProvider>
+            <DatabaseProvider>
+              <ToastProvider>
+                <TodoListProvider>
+                  <TodoRecoveryProvider>{children}</TodoRecoveryProvider>
+                </TodoListProvider>
+              </ToastProvider>
+            </DatabaseProvider>
+          </AuthProvider>
+        </SerwistProvider>
       </body>
     </html>
   );
