@@ -15,7 +15,9 @@ export default function Header({ left, right }: Props) {
   const meta = getRouteMeta(pathname);
 
   return (
-    <header className={cn('p-4 bg-card', 'flex justify-between')}>
+    <header
+      className={cn('p-4 bg-card', 'flex justify-between', 'relative z-10')}
+    >
       <div className="size-6">{left}</div>
       <h1>{meta.pageTitle || meta.title}</h1>
       <div className="size-6">{right}</div>
