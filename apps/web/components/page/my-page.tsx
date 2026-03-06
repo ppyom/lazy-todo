@@ -76,7 +76,7 @@ export default function MyPage() {
   }
 
   return (
-    <div className="p-4 flex flex-col gap-6 overflow-y-auto h-full">
+    <div className="p-4 flex flex-col gap-4 overflow-y-auto h-full">
       {status === 'unauthenticated' ? (
         <Alert
           title="기록을 어디서든 불러오고 싶다면"
