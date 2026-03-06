@@ -19,14 +19,14 @@ export default function Alert({
     <div
       className={cn(
         'flex gap-2 p-4',
-        'border-2 border-secondary bg-secondary/50 rounded-2xl',
+        'border border-secondary bg-secondary/50 rounded-2xl',
         className,
       )}
     >
       {IconComponent && <IconComponent className="mt-1" size={16} />}
-      <div className="space-y-2">
-        <p className="font-bold">{title}</p>
-        <p>{content}</p>
+      <div className="space-y-1">
+        <p className="font-bold text-sm">{title}</p>
+        <p className="font-normal text-sm">{content}</p>
       </div>
     </div>
   );
