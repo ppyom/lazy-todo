@@ -35,7 +35,7 @@ export default function MyPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const db = useDb();
-  const { sync, syncStatus } = useSync();
+  const { sync, syncStatus, isOnline } = useSync();
   const toast = useToast();
 
   const handleSignOut = async () => {
@@ -101,11 +101,13 @@ export default function MyPage() {
               label="로그인하기"
               description="내 기록을 불러올 수 있어요."
               href="/login"
+              disabled={!isOnline}
             />
             <MenuItem
               label="회원가입하기"
               description="새 보관함을 만들 수 있어요."
               href="/signup"
+              disabled={!isOnline}
             />
           </>
         ) : (
@@ -115,6 +117,7 @@ export default function MyPage() {
               label="로그아웃"
               description="로그아웃 후에도 기록은 기기에 남아있어요."
               onClick={handleSignOut}
+              disabled={!isOnline}
             />
           </>
         )}
@@ -139,6 +142,7 @@ export default function MyPage() {
                     : '변경된 내용을 서버에 즉시 반영해요.'
             }
             onClick={handleSync}
+            disabled={!isOnline}
           />
         )}
         <ResetAction onReset={handleReset} />
@@ -147,7 +151,7 @@ export default function MyPage() {
       {/* 기타 기능들 */}
       {status === 'authenticated' && (
         <div className="bg-card rounded-2xl shrink-0 overflow-hidden">
-          <WithdrawAction onWithdraw={handleWithdraw} />
+          <WithdrawAction onWithdraw={handleWithdraw} disabled={!isOnline} />
         </div>
       )}
     </div>

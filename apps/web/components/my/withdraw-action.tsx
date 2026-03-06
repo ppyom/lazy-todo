@@ -8,9 +8,10 @@ import MenuItem from './menu-item';
 
 interface Props {
   onWithdraw: () => void;
+  disabled?: boolean;
 }
 
-export default function WithdrawAction({ onWithdraw }: Props) {
+export default function WithdrawAction({ onWithdraw, disabled }: Props) {
   const [open, setOpen] = useState(false);
 
   const handleWithdraw = () => {
@@ -24,6 +25,7 @@ export default function WithdrawAction({ onWithdraw }: Props) {
         label="회원탈퇴"
         description="탈퇴 시 서버에 저장된 모든 기록이 완전히 삭제돼요."
         onClick={() => setOpen(true)}
+        disabled={disabled}
       />
       <DeleteModal
         open={open}
