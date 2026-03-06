@@ -101,7 +101,7 @@ export default function DraggableEmojiList({
             <Button
               key={key}
               variant={selectedEmotion === currentKey ? 'default' : 'secondary'}
-              className="rounded-full shrink-0"
+              className="rounded-full shrink-0 size-12"
               title={currentEmotion.label}
               onClick={() => onEmotionClick(currentKey)}
             >
